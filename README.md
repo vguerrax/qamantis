@@ -27,5 +27,59 @@ A automação será feita sobre a ferramenta Mantis Bugtracker utilizando banco 
 
 ## Cenários
 ### Login
-1) Realizar login com sucesso
-2) Realizar login com dados inválidos
+1. Realizar login com sucesso
+2. Realizar login com dados inválidos
+3. Validar perfis de acesso
+
+### Gerenciar Usuários
+4. Criar conta pela tela de login
+5. Criar conta pela tela de login com dados inválidos
+6. Criar conta
+7. Criar conta com dados inválidos
+8. Alterar usuário
+9. Alterar usuário com dados inválidos
+10. Desabilitar usuário
+11. Habilitar usuário
+12. Excluir usuário
+
+### Gerenciar Projetos
+13. Cadastrar projeto
+14. Cadastrar projeto com dados inválidos
+15. Alterar projeto
+16. Alterar projeto com dados inválidos
+17. Desabilitar projeto
+18. Habilitar projeto
+19. Cadastrar subprojeto
+20. Incluir projeto existente como subprojeto
+21. Adicionar categoria ao projeto
+22. Adicionar categoria com dados inválidos
+23. Alterar categoria
+24. Alterar categoria com dados inválidos
+25. Adicionar e editar categoria
+26. Deletar categoria
+27. Importar categorias de outro projeto
+28. Adicionar versão ao projeto
+29. Adicionar versão com dados inválidos
+30. Alterar versão
+31. Alterar versão com dados inválidos
+32. Adicionar e alterar versão
+33. Deletar versão
+34. Importar versões de outro projeto
+
+### Gerenciar Tarefas
+35. Pesquisar tarefa por número
+36. Pesquisar tarefa com filtros
+37. Exportar tarefas
+38. Criar terafa
+39. Criar tarefa com dados inválidos
+40. Criar tarefa com anexo de arquivo
+41. Alterar tarefa
+42. Alterar tarefa com dados inválidos
+43. Alterar tarefa para privado
+44. Alterar tarefa para público
+45. Atribuir tarefa
+46. Alterar status da tarefa
+47. Adicionar anotação à tarefa
+48. Adicionar tarefa relacionada
+49. Remover tarefa relacionada
+50. Deletar tarefa
