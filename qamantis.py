@@ -5,6 +5,10 @@ __version__ = "1.0.1-SNAPSHOT"
 
 import argparse
 import configparser
+import pytest
+from utils.file_utils import deletar_diretorio
+
+args = None
 
 # read the configs from config.ini file
 config = configparser.ConfigParser()
@@ -65,6 +69,10 @@ parser.add_argument('-u', '--url', help='the application URL, override the passe
 parser.add_argument('-v', '--version', action='version',
                     version='%(prog)s ' + __version__)
 
-if __name__ == '__main__':
+def get_args():
     # Parse the command-line args
-    args = parser.parse_args()
+    return parser.parse_args()
+
+if __name__ == '__main__':
+    deletar_diretorio('test_output')
+    pytest.main(['--alluredir', './test_output/'])

@@ -1,3 +1,4 @@
 pytest
 selenium
+page_objects
 allure-pytest
