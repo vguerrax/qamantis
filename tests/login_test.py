@@ -5,6 +5,10 @@ from pages.pagina_inicial_page import PaginaInicialPage
 from driver_factory.driver_factory import get_driver
 from base_test import setup_and_teardown
 
+@pytest.fixture(scope='function')
+def garantir_usuario_existe(usuario, senha):
+    pass
+
 @title('Login')
 class TestLogin():
     webdriver = None
@@ -13,7 +17,8 @@ class TestLogin():
 
     @title('Login válido')
     @description('Realizar o login com usuário e senhas válidos')
-    def test_login_valido(self, setup_and_teardown):
+    def test_login_valido(self, setup_and_teardown, garantir_usuario_existe):
+        garantir_usuario_existe('admin', 'admin')
         self.webdriver = setup_and_teardown['webdriver']
         self.login_page = LoginPage(self.webdriver)
         self.login_page.acessarPaginaInicial()

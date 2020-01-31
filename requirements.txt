@@ -2,3 +2,4 @@ pytest
 selenium
 page_objects
 allure-pytest
+mysql-connector-python
