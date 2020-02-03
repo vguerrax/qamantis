@@ -1,5 +1,5 @@
 import pytest
-from utils.screenshot import anexa_resultado
+from commons.screenshot import anexa_resultado
 from driver_factory.driver_factory import get_driver
 
 @pytest.fixture(scope='function')
