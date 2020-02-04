@@ -73,4 +73,4 @@ def get_args():
 
 if __name__ == '__main__':
     deletar_diretorio('test_output')
-    pytest.main(['--alluredir', './test_output/', 'tests/login_test.py::TestLogin::test_validar_perfis_acesso'])
+    pytest.main(['--alluredir', './test_output/'])
