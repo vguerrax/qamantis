@@ -1,1 +1,0 @@
-{"uuid": "816e2dcd-fad8-415d-a24b-786cc0bdf160", "children": ["b054397b-79d4-4368-ae04-9a76f8c5d4e2"], "befores": [{"name": "garantir_usuario_nao_existe", "status": "passed", "start": 1580783267849, "stop": 1580783267849}], "start": 1580783267849, "stop": 1580783272973}

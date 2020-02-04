@@ -3,5 +3,5 @@ from qamantis import get_args
 
 class BasePage(PageObject):
 
-    def acessarPaginaInicial(self):
+    def acessar_pagina_inicial(self):
         self.get(get_args().url)

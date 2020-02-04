@@ -1,6 +1,15 @@
 from commons.file_utils import conteudo_arquivo
 from commons.connect import Connect
 
+perfis_acesso = {
+    'visualizador': 10,
+    'relator': 25,
+    'atualizador': 40,
+    'desenvolvedor': 55,
+    'gerente': 70,
+    'administrador': 90
+}
+
 class UsuarioDAO(Connect):
 
     def deletar_usuario(self, usuario):
@@ -17,7 +26,7 @@ class UsuarioDAO(Connect):
             email = usuario + "@email.com.br"
         if nome == '':
             nome = usuario
-        params = (usuario, nome, email, senha, nivel_acesso)
+        params = (usuario, nome, email, senha, perfis_acesso[nivel_acesso])
         self.execute_statement(query, params)
         
     def atualizar_senha(self, usuario, senha):
