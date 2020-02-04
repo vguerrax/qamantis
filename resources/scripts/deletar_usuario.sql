@@ -1,1 +1,1 @@
-delete from mantis_user_table where username = '%s'
+delete from mantis_user_table where username = %s

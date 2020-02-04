@@ -1,0 +1,1 @@
+update mantis_user_table set password = md5(%s) where username = %s

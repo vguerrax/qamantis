@@ -6,6 +6,7 @@ class LoginPage(BasePage):
     usuario_field = PageElement(id_ = 'username')
     senha_field = PageElement(id_ = 'password')
     entrar_button = PageElement(css = 'input[type="submit"]')
+    mensagem_alerta_label = PageElement(css = 'div.alert p')
 
     def informar_usuario(self, usuario):
         self.usuario_field = usuario
@@ -15,3 +16,6 @@ class LoginPage(BasePage):
 
     def clicar_em_entrar(self):
         self.entrar_button.click()
+
+    def retorna_mensagem_alerta(self):
+        return self.mensagem_alerta_label.text
