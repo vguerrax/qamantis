@@ -72,5 +72,5 @@ def get_args():
     return parser.parse_args()
 
 if __name__ == '__main__':
-    deletar_diretorio('test_output')
+    #deletar_diretorio('test_output')
     pytest.main(['--alluredir', './test_output/'])
