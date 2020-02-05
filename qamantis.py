@@ -78,6 +78,6 @@ if __name__ == '__main__':
     args = get_args()
     if not hasattr(args, 'h') or not hasattr(args, 'v'):
         command = ['--alluredir', './test_output/']
-        if hasattr(args, 'pytest_args'):
+        if hasattr(args, 'pytest_args') and args.pytest_args != None:
             command.extend(args.pytest_args.split())
         pytest.main(command)
