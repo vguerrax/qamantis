@@ -1,0 +1,4 @@
+;conta.login.vazio@email.com;O nome de usuário não é válido. Nomes de usuário podem conter apenas letras, números, espaços, hífens, pontos, sinais de mais e sublinhados.
+*usuario#125;conta.login.invalido@email.com;O nome de usuário não é válido. Nomes de usuário podem conter apenas letras, números, espaços, hífens, pontos, sinais de mais e sublinhados.
+conta.email.vazio;;E-mail inválido.
+conta.email.invalido;conta.email.invalido.com;E-mail inválido.
