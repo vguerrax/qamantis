@@ -30,8 +30,6 @@ class Connect():
             self.get_connection()
         cursor = self.conn.cursor()
         cursor.execute(query, params)
-        for r in cursor:
-            resultados.append(r)
         cursor.close()
         self.conn.commit()
 

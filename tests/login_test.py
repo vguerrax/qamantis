@@ -6,7 +6,6 @@ from driver_factory.driver_factory import get_driver
 from commons import read_csv
 from base_test import setup_and_teardown, garantir_usuario_existe, garantir_usuario_nao_existe
 
-@title('Login')
 class TestLogin():
     webdriver = None
     login_page = None

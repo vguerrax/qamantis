@@ -1,5 +1,6 @@
 from commons.file_utils import conteudo_arquivo
 from commons.connect import Connect
+from dto.usuario_dto import UsuarioDTO
 
 perfis_acesso = {
     'visualizador': 10,
@@ -8,6 +9,15 @@ perfis_acesso = {
     'desenvolvedor': 55,
     'gerente': 70,
     'administrador': 90
+}
+
+perfis_acesso_cod = {
+    10: 'visualizador',
+    25: 'relator',
+    40: 'atualizador',
+    55: 'desenvolvedor',
+    70: 'gerente',
+    90: 'administrador'
 }
 
 class UsuarioDAO(Connect):
@@ -32,3 +42,15 @@ class UsuarioDAO(Connect):
     def atualizar_senha(self, usuario, senha):
         query = conteudo_arquivo(self.scripts_path + 'atualizar_senha_usuario.sql')
         self.execute_statement(query, (usuario, senha))
+
+    def obtem_usuario_por_login(self, login):
+        usuarioDTO = UsuarioDTO()
+        query = conteudo_arquivo(self.scripts_path + 'usuario.sql')
+        resultados = self.execute_query(query, (login,))[0]
+        usuarioDTO.usuario = resultados[0]
+        usuarioDTO.nome = resultados[1]
+        usuarioDTO.email = resultados[2]
+        usuarioDTO.senha = resultados[3]
+        usuarioDTO.nivel_acesso = perfis_acesso_cod[resultados[4]]
+        return usuarioDTO
+

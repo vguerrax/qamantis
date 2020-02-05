@@ -66,6 +66,8 @@ parser.add_argument('-u', '--url', help='the application URL, override the passe
                     required=url_req, default=url)
 parser.add_argument('-v', '--version', action='version',
                     version='%(prog)s ' + __version__)
+parser.add_argument('-p', '--pytest_args', metavar='"Pytest options"', 
+                    default=None, help='the Pytest command line args to execution')
 
 def get_args():
     # Parse the command-line args
@@ -73,4 +75,9 @@ def get_args():
 
 if __name__ == '__main__':
     #deletar_diretorio('test_output')
-    pytest.main(['--alluredir', './test_output/'])
+    args = get_args()
+    if not hasattr(args, 'h') or not hasattr(args, 'v'):
+        command = ['--alluredir', './test_output/']
+        if hasattr(args, 'pytest_args'):
+            command.extend(args.pytest_args.split())
+        pytest.main(command)
