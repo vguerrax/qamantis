@@ -46,11 +46,14 @@ class UsuarioDAO(Connect):
     def obtem_usuario_por_login(self, login):
         usuarioDTO = UsuarioDTO()
         query = conteudo_arquivo(self.scripts_path + 'usuario.sql')
-        resultados = self.execute_query(query, (login,))[0]
-        usuarioDTO.usuario = resultados[0]
-        usuarioDTO.nome = resultados[1]
-        usuarioDTO.email = resultados[2]
-        usuarioDTO.senha = resultados[3]
-        usuarioDTO.nivel_acesso = perfis_acesso_cod[resultados[4]]
+        resultados = self.execute_query(query, (login,))
+        if resultados == []:
+            return None
+        resultado = resultados[0]
+        usuarioDTO.usuario = resultado[0]
+        usuarioDTO.nome = resultado[1]
+        usuarioDTO.email = resultado[2]
+        usuarioDTO.senha = resultado[3]
+        usuarioDTO.nivel_acesso = perfis_acesso_cod[resultado[4]]
         return usuarioDTO
 

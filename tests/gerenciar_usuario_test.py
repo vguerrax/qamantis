@@ -3,9 +3,10 @@ from allure import title, description
 from pages.login_page import LoginPage
 from pages.criar_conta_page import CriarContaPage
 from pages.erro_page import ErroPage
+from pages.sucesso_page import SucessoPage
 from pages.gerenciar.gerenciar_page import GerenciarPage
 from pages.gerenciar.gerenciar_usuarios_page import GerenciarUsuariosPage
-from pages.gerenciar.cadastro_usuario_page import CadastroUsuarioPage
+from pages.gerenciar.cadastro_usuario_page import CadastroUsuarioPage, AlteracaoUsuarioPage
 from driver_factory.driver_factory import get_driver
 from dao.usuario_dao import UsuarioDAO
 from dto.usuario_dto import UsuarioDTO
@@ -75,6 +76,7 @@ class TestGerenciarUsuarios():
 
     webdriver = None
     cadastroUsuarioPage = None
+    alteracaoUsuarioPage = None
     gerenciarPage = None
     gerenciarUsuariosPage = None
     
@@ -110,3 +112,81 @@ class TestGerenciarUsuarios():
         assert usuarioDTO.nome == nome
         assert usuarioDTO.email == email
         assert usuarioDTO.nivel_acesso == nivel_acesso
+
+    @title('Criar conta de usuário com dados inválidos')
+    @description('Validar a criação de usuário através do menu "Gerenciar" informando dados inválidos')
+    @pytest.mark.parametrize('usuario,nome,email,nivel_acesso,mensagem', read_csv.get_csv_data_in_tuples('resources/test_data/cadastrar_usuario_dados_invalidos.csv', delimiter=';'))
+    def test_cadastrar_usuario_dados_invalidos(self, setup_and_teardown,
+        garantir_usuario_nao_existe, garantir_usuario_com_email_nao_existe, logar_com_usuario,
+        usuario, nome, email, nivel_acesso, mensagem):
+
+        if usuario != '':
+            garantir_usuario_nao_existe(usuario)
+        garantir_usuario_com_email_nao_existe(email)
+
+        self.webdriver = setup_and_teardown['webdriver']
+        logar_com_usuario(self.webdriver, 'admin', 'admin')
+
+        self.gerenciarPage = GerenciarPage(self.webdriver)
+        self.gerenciarPage.acessar_menu_gerenciar()
+        self.gerenciarPage.acessar_aba_gerenciar_usuarios()
+
+        self.gerenciarUsuariosPage = GerenciarUsuariosPage(self.webdriver)
+        self.gerenciarUsuariosPage.cadastrar_novo_usuario()
+
+        self.cadastroUsuarioPage = CadastroUsuarioPage(self.webdriver)
+        self.cadastroUsuarioPage.informar_usuario(usuario)
+        self.cadastroUsuarioPage.informar_nome(nome)
+        self.cadastroUsuarioPage.informar_email(email)
+        self.cadastroUsuarioPage.selecionar_nivel_acesso(nivel_acesso)
+        self.cadastroUsuarioPage.clicar_em_criar_usuario()
+
+        erroPage = ErroPage(self.webdriver)
+        assert mensagem in erroPage.retornar_erro()
+
+    @title('Alterar cadastro de usuário')
+    @description('Validar a alteração dos dados do usuário')
+    def test_alterar_usuario(self, setup_and_teardown,
+        garantir_usuario_existe, garantir_usuario_nao_existe, garantir_usuario_com_email_nao_existe,
+        logar_com_usuario):
+        usuario = 'alteracao.conta'
+        nome = 'Alteracao Conta'
+        email = 'alteracao.conta@email.com'
+        nivel_acesso = 'relator'
+        garantir_usuario_existe(usuario, usuario, nivel_acesso, nome=nome, email=email)
+
+
+        usuario_novo = 'conta.alterada'
+        nome_novo = 'Conta Alterada'
+        email_novo = 'conta.alterada@email.com'
+        nivel_acesso_novo = 'visualizador'
+
+        garantir_usuario_nao_existe(usuario_novo)
+        garantir_usuario_com_email_nao_existe(email_novo)
+
+        self.webdriver = setup_and_teardown['webdriver']
+        logar_com_usuario(self.webdriver, 'admin', 'admin')
+
+        self.gerenciarPage = GerenciarPage(self.webdriver)
+        self.gerenciarPage.acessar_menu_gerenciar()
+        self.gerenciarPage.acessar_aba_gerenciar_usuarios()
+
+        self.gerenciarUsuariosPage = GerenciarUsuariosPage(self.webdriver)
+        assert self.gerenciarUsuariosPage.selecionar_usuario(usuario)
+
+        self.alteracaoUsuarioPage = AlteracaoUsuarioPage(self.webdriver)
+        self.alteracaoUsuarioPage.alterar_usuario(usuario_novo)
+        self.alteracaoUsuarioPage.alterar_nome(nome_novo)
+        self.alteracaoUsuarioPage.alterar_email(email_novo)
+        self.alteracaoUsuarioPage.selecionar_nivel_acesso(nivel_acesso_novo)
+        self.alteracaoUsuarioPage.clicar_em_atualizar_usuario()
+
+        sucessoPage = SucessoPage(self.webdriver)
+        assert 'Operação realizada com sucesso.' in sucessoPage.retornar_mensagem()
+
+        usuarioDTO = UsuarioDAO().obtem_usuario_por_login(usuario_novo)
+        assert usuarioDTO != None
+        assert usuarioDTO.usuario == usuario_novo
+        assert usuarioDTO.nome == nome_novo
+        assert usuarioDTO.email == email_novo
+        assert usuarioDTO.nivel_acesso == nivel_acesso_novo

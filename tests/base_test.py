@@ -5,6 +5,10 @@ from dao.usuario_dao import UsuarioDAO
 
 @pytest.fixture(scope='function')
 def setup_and_teardown():
+    usuarioDAO = UsuarioDAO()
+    usuarioDAO.deletar_usuario('admin')
+    usuarioDAO.criar_usuario('admin', 'admin', 'administrador')
+    usuarioDAO.close_connection()
     webdriver = get_driver()
     yield {"webdriver": webdriver}
     anexa_resultado(webdriver)
@@ -13,10 +17,10 @@ def setup_and_teardown():
 @pytest.fixture(scope='function')
 def garantir_usuario_existe():
 
-    def _garantir_usuario(usuario, senha, nivel_acesso):
+    def _garantir_usuario(usuario, senha, nivel_acesso, nome='', email=''):
         usuarioDAO = UsuarioDAO()
         usuarioDAO.deletar_usuario(usuario)
-        usuarioDAO.criar_usuario(usuario, senha, nivel_acesso)
+        usuarioDAO.criar_usuario(usuario, senha, nivel_acesso, nome=nome, email=email)
         usuarioDAO.close_connection()
         return True
     return _garantir_usuario
