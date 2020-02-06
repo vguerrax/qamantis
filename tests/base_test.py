@@ -40,3 +40,18 @@ def garantir_usuario_com_email_nao_existe():
         usuarioDAO.close_connection()
         return True
     return _garantir_usuario_com_email_nao_existe
+
+@pytest.fixture(scope='function')
+def logar_com_usuario():
+    from pages.login_page import LoginPage
+
+    def _logar_com_usuario(webdriver, usuario, senha):
+        loginPage = LoginPage(webdriver)
+        loginPage.acessar_pagina_inicial()
+        loginPage.informar_usuario(usuario)
+        loginPage.clicar_em_entrar()
+        loginPage.informar_senha(senha)
+        loginPage.clicar_em_entrar()
+        return True
+
+    return _logar_com_usuario

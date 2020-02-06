@@ -6,8 +6,13 @@ class PaginaInicialPage(BasePage):
     usuario_logado_label = PageElement(css = 'span.user-info')
     menu_lateral_list = PageElement(id_ = 'sidebar')
 
+    menu_gerenciar_button = PageElement(css = 'a[href="/manage_overview_page.php"]')
+
     def retorna_usuario_logado(self):
         return self.usuario_logado_label.text
 
     def retorna_texto_menu(self):
         return self.menu_lateral_list.text
+
+    def acessar_menu_gerenciar(self):
+        self.menu_gerenciar_button.click()
