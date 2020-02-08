@@ -108,7 +108,8 @@ class TestGerenciarUsuarios():
         self.cadastroUsuarioPage.clicar_em_criar_usuario()
 
         sucessoPage = SucessoPage(self.webdriver)
-        assert 'Operação realizada com sucesso.' in sucessoPage.retornar_mensagem()
+        mensagem = 'Usuário ' + usuario + ' criado com um nível de acesso de ' + nivel_acesso
+        assert mensagem in sucessoPage.retornar_mensagem()
 
         usuarioDTO = UsuarioDAO().obtem_usuario_por_login(usuario)
         assert usuarioDTO.usuario == usuario

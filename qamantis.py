@@ -77,7 +77,7 @@ if __name__ == '__main__':
     #deletar_diretorio('test_output')
     args = get_args()
     if not hasattr(args, 'h') or not hasattr(args, 'v'):
-        command = ['--alluredir', './test_output/']
+        command = ['--alluredir', './test_output/', '-v', '--tb=short']
         if hasattr(args, 'pytest_args') and args.pytest_args != None:
             command.extend(args.pytest_args.split())
         pytest.main(command)
