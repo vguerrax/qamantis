@@ -1,1 +1,1 @@
-select username "usuario", realname "nome", email, password "senha", access_level "nivel_acesso" from mantis_user_table where username = %s
+select username "usuario", realname "nome", email, password "senha", access_level "nivel_acesso", enabled "habilitado" from mantis_user_table where username = %s

@@ -107,6 +107,9 @@ class TestGerenciarUsuarios():
         self.cadastroUsuarioPage.selecionar_nivel_acesso(nivel_acesso)
         self.cadastroUsuarioPage.clicar_em_criar_usuario()
 
+        sucessoPage = SucessoPage(self.webdriver)
+        assert 'Operação realizada com sucesso.' in sucessoPage.retornar_mensagem()
+
         usuarioDTO = UsuarioDAO().obtem_usuario_por_login(usuario)
         assert usuarioDTO.usuario == usuario
         assert usuarioDTO.nome == nome
@@ -155,7 +158,6 @@ class TestGerenciarUsuarios():
         nivel_acesso = 'relator'
         garantir_usuario_existe(usuario, usuario, nivel_acesso, nome=nome, email=email)
 
-
         usuario_novo = 'conta.alterada'
         nome_novo = 'Conta Alterada'
         email_novo = 'conta.alterada@email.com'
@@ -190,3 +192,118 @@ class TestGerenciarUsuarios():
         assert usuarioDTO.nome == nome_novo
         assert usuarioDTO.email == email_novo
         assert usuarioDTO.nivel_acesso == nivel_acesso_novo
+
+    @title('Alterar conta de usuário com dados inválidos')
+    @description('Validar a alteração de usuário através do menu "Gerenciar" informando dados inválidos')
+    @pytest.mark.parametrize('usuario_novo,nome_novo,email_novo,nivel_acesso_novo,mensagem', read_csv.get_csv_data_in_tuples('resources/test_data/cadastrar_usuario_dados_invalidos.csv', delimiter=';'))
+    def test_alterar_usuario_dados_invalidos(self, setup_and_teardown,
+        garantir_usuario_existe, logar_com_usuario,
+        usuario_novo, nome_novo, email_novo, nivel_acesso_novo, mensagem):
+
+        usuario_busca = 'alteracao.conta'
+        nome_busca = 'Alteracao Conta'
+        email_busca = 'alteracao.conta@email.com'
+        nivel_acesso_busca = 'relator'
+        garantir_usuario_existe(usuario_busca, usuario_busca, nivel_acesso_busca, nome=nome_busca, email=email_busca)
+
+        self.webdriver = setup_and_teardown['webdriver']
+        logar_com_usuario(self.webdriver, 'admin', 'admin')
+
+        self.gerenciarPage = GerenciarPage(self.webdriver)
+        self.gerenciarPage.acessar_menu_gerenciar()
+        self.gerenciarPage.acessar_aba_gerenciar_usuarios()
+
+        self.gerenciarUsuariosPage = GerenciarUsuariosPage(self.webdriver)
+        assert self.gerenciarUsuariosPage.selecionar_usuario(usuario_busca)
+
+        self.alteracaoUsuarioPage = AlteracaoUsuarioPage(self.webdriver)
+        self.alteracaoUsuarioPage.alterar_usuario(usuario_novo)
+        self.alteracaoUsuarioPage.alterar_nome(nome_novo)
+        self.alteracaoUsuarioPage.alterar_email(email_novo)
+        self.alteracaoUsuarioPage.selecionar_nivel_acesso(nivel_acesso_novo)
+        self.alteracaoUsuarioPage.clicar_em_atualizar_usuario()
+
+        erroPage = ErroPage(self.webdriver)
+        assert mensagem in erroPage.retornar_erro()
+
+    @title('Desabilitar Usuário')
+    @description('Validar a opção de desabilitar o usuário na alteração')
+    def test_desabilitar_usuario(self, setup_and_teardown, garantir_usuario_existe, logar_com_usuario):
+        usuario_busca = 'alteracao.conta'
+        nome_busca = 'Alteracao Conta'
+        email_busca = 'alteracao.conta@email.com'
+        nivel_acesso_busca = 'relator'
+        garantir_usuario_existe(usuario_busca, usuario_busca, nivel_acesso_busca, nome=nome_busca, email=email_busca, habilitado=True)
+        
+        self.webdriver = setup_and_teardown['webdriver']
+        logar_com_usuario(self.webdriver, 'admin', 'admin')
+
+        self.gerenciarPage = GerenciarPage(self.webdriver)
+        self.gerenciarPage.acessar_menu_gerenciar()
+        self.gerenciarPage.acessar_aba_gerenciar_usuarios()
+
+        self.gerenciarUsuariosPage = GerenciarUsuariosPage(self.webdriver)
+        assert self.gerenciarUsuariosPage.selecionar_usuario(usuario_busca)
+
+        self.alteracaoUsuarioPage = AlteracaoUsuarioPage(self.webdriver)
+        self.alteracaoUsuarioPage.desmarcar_usuario_habilitado()
+        self.alteracaoUsuarioPage.clicar_em_atualizar_usuario()
+
+        sucessoPage = SucessoPage(self.webdriver)
+        assert 'Operação realizada com sucesso.' in sucessoPage.retornar_mensagem()
+
+        usuarioDTO = UsuarioDAO().obtem_usuario_por_login(usuario_busca)
+        assert usuarioDTO != None
+        assert not usuarioDTO.habilitado
+
+        self.gerenciarPage.clicar_usuario_logado()
+        self.gerenciarPage.clicar_em_sair()
+
+        loginPage = LoginPage(self.webdriver)
+        loginPage.informar_usuario(usuario_busca)
+        loginPage.clicar_em_entrar()
+        loginPage.informar_senha(usuario_busca)
+        loginPage.clicar_em_entrar()
+        assert 'Sua conta pode estar desativada ou bloqueada ou o nome de usuário e a senha que você digitou não estão corretos.' == loginPage.retorna_mensagem_alerta()
+
+    @title('Habilitar Usuário')
+    @description('Validar a opção de habilitar o usuário na alteração')
+    def test_habilitar_usuario(self, setup_and_teardown, garantir_usuario_existe, logar_com_usuario):
+        usuario_busca = 'alteracao.conta'
+        nome_busca = 'Alteracao Conta'
+        email_busca = 'alteracao.conta@email.com'
+        nivel_acesso_busca = 'relator'
+        garantir_usuario_existe(usuario_busca, usuario_busca, nivel_acesso_busca, nome=nome_busca, email=email_busca, habilitado=False)
+        
+        self.webdriver = setup_and_teardown['webdriver']
+        logar_com_usuario(self.webdriver, 'admin', 'admin')
+
+        self.gerenciarPage = GerenciarPage(self.webdriver)
+        self.gerenciarPage.acessar_menu_gerenciar()
+        self.gerenciarPage.acessar_aba_gerenciar_usuarios()
+
+        self.gerenciarUsuariosPage = GerenciarUsuariosPage(self.webdriver)
+        self.gerenciarUsuariosPage.marcar_mostrar_desativados()
+        self.gerenciarUsuariosPage.clicar_em_aplicar_filtros()
+        assert self.gerenciarUsuariosPage.selecionar_usuario(usuario_busca)
+
+        self.alteracaoUsuarioPage = AlteracaoUsuarioPage(self.webdriver)
+        self.alteracaoUsuarioPage.marcar_usuario_habilitado()
+        self.alteracaoUsuarioPage.clicar_em_atualizar_usuario()
+
+        sucessoPage = SucessoPage(self.webdriver)
+        assert 'Operação realizada com sucesso.' in sucessoPage.retornar_mensagem()
+
+        usuarioDTO = UsuarioDAO().obtem_usuario_por_login(usuario_busca)
+        assert usuarioDTO != None
+        assert usuarioDTO.habilitado
+
+        self.gerenciarPage.clicar_usuario_logado()
+        self.gerenciarPage.clicar_em_sair()
+
+        loginPage = LoginPage(self.webdriver)
+        loginPage.informar_usuario(usuario_busca)
+        loginPage.clicar_em_entrar()
+        loginPage.informar_senha(usuario_busca)
+        loginPage.clicar_em_entrar()
+        assert usuario_busca == self.gerenciarPage.retorna_usuario_logado()

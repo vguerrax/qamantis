@@ -4,3 +4,4 @@ class UsuarioDTO():
     email = None
     senha = None
     nivel_acesso = None
+    habilitado = None

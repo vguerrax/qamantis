@@ -17,10 +17,10 @@ def setup_and_teardown():
 @pytest.fixture(scope='function')
 def garantir_usuario_existe():
 
-    def _garantir_usuario(usuario, senha, nivel_acesso, nome='', email=''):
+    def _garantir_usuario(usuario, senha, nivel_acesso, nome='', email='', habilitado=True):
         usuarioDAO = UsuarioDAO()
         usuarioDAO.deletar_usuario(usuario)
-        usuarioDAO.criar_usuario(usuario, senha, nivel_acesso, nome=nome, email=email)
+        usuarioDAO.criar_usuario(usuario, senha, nivel_acesso, nome=nome, email=email, habilitado=habilitado)
         usuarioDAO.close_connection()
         return True
     return _garantir_usuario

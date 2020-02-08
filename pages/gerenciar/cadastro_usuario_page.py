@@ -65,11 +65,15 @@ class AlteracaoUsuarioPage(BasePage):
         Select(self.nivel_acesso_select).select_by_visible_text(nivel_acesso)
 
     def marcar_usuario_habilitado(self):
-        if self.usuario_habilitado_checkbox.checked != 'checked':
+        if not self.usuario_habilitado_checkbox.get_attribute('checked'):
+            self.usuario_habilitado_checkbox_span.click()
+
+    def desmarcar_usuario_habilitado(self):
+        if self.usuario_habilitado_checkbox.get_attribute('checked'):
             self.usuario_habilitado_checkbox_span.click()
 
     def marcar_usuario_protegido(self):
-        if self.usuario_protegido_checkbox.checked != 'checked':
+        if not self.usuario_protegido_checkbox.get_attribute('checked'):
             self.usuario_protegido_checkbox_span.click()
 
     def clicar_em_atualizar_usuario(self):

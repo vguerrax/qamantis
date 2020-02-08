@@ -20,6 +20,16 @@ perfis_acesso_cod = {
     90: 'administrador'
 }
 
+convert_cod_to_boolean = {
+    1: True,
+    0: False
+}
+
+convert_boolean_to_cod = {
+    True: 1,
+    False: 0
+}
+
 class UsuarioDAO(Connect):
 
     def deletar_usuario(self, usuario):
@@ -30,13 +40,13 @@ class UsuarioDAO(Connect):
         query = conteudo_arquivo(self.scripts_path + 'deletar_usuario_email.sql')
         self.execute_statement(query, (email,))
 
-    def criar_usuario(self, usuario, senha, nivel_acesso, nome = '', email = ''):
+    def criar_usuario(self, usuario, senha, nivel_acesso, nome = '', email = '', habilitado=True):
         query = conteudo_arquivo(self.scripts_path + 'criar_usuario.sql')
         if email == '':
             email = usuario + "@email.com.br"
         if nome == '':
             nome = usuario
-        params = (usuario, nome, email, senha, perfis_acesso[nivel_acesso])
+        params = (usuario, nome, email, senha, convert_boolean_to_cod[habilitado], perfis_acesso[nivel_acesso])
         self.execute_statement(query, params)
         
     def atualizar_senha(self, usuario, senha):
@@ -55,5 +65,6 @@ class UsuarioDAO(Connect):
         usuarioDTO.email = resultado[2]
         usuarioDTO.senha = resultado[3]
         usuarioDTO.nivel_acesso = perfis_acesso_cod[resultado[4]]
+        usuarioDTO.habilitado = convert_cod_to_boolean[resultado[5]]
         return usuarioDTO
 

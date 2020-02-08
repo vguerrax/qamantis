@@ -5,6 +5,7 @@ class PaginaInicialPage(BasePage):
 
     usuario_logado_label = PageElement(css = 'span.user-info')
     menu_lateral_list = PageElement(id_ = 'sidebar')
+    sair_button = PageElement(css = 'a[href="/logout_page.php"]')
 
     menu_gerenciar_button = PageElement(css = 'a[href="/manage_overview_page.php"]')
 
@@ -16,3 +17,9 @@ class PaginaInicialPage(BasePage):
 
     def acessar_menu_gerenciar(self):
         self.menu_gerenciar_button.click()
+
+    def clicar_usuario_logado(self):
+        self.usuario_logado_label.click()
+
+    def clicar_em_sair(self):
+        self.sair_button.click()
