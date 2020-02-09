@@ -1,0 +1,41 @@
+# Usage: docker-compose up -d
+version: '2'
+services:
+  mysql:
+    image: 'mysql:5.7.24'
+    container_name: mysql
+    hostname: mysql
+    environment:
+      - MYSQL_USER=mantisbt
+      - MYSQL_PASSWORD=mantisbt
+      - MYSQL_DATABASE=bugtracker
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PWD=root
+      - ALLOW_EMPTY_PASSWORD=no
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mysql_data:/bitnami'
+      - '/vagrant/docker-entrypoint-initdb:/docker-entrypoint-initdb.d'
+    restart: always
+
+  mantisbt:
+    image: vimagick/mantisbt:latest
+    container_name: mantisbt
+    hostname: mantisbt
+    ports:
+      - "80:80"
+    volumes:
+      - 'mantisbt_data:/var/www/html'
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    restart: always
+
+volumes:
+  mysql_data:
+    driver: local
+  mantisbt_data:
+    driver: local

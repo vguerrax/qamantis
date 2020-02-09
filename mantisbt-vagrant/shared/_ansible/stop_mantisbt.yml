@@ -1,0 +1,13 @@
+- hosts: ubuntu-01
+  connection: local
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  tasks:
+
+  - docker_service:
+      project_src: "{{ project_src }}"
+      state: present
+      stopped: yes
+    register: output

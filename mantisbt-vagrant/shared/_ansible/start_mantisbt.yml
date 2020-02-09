@@ -1,0 +1,12 @@
+- hosts: all
+  connection: local
+  become: yes
+  become_user: root
+  gather_facts: no
+
+  tasks:
+
+  - docker_service:
+      project_src: "{{ project_src }}"
+      state: present
+    register: output
